@@ -20,6 +20,7 @@ provider:
     SQL_DB:              ${ssm:rsmSQLDatabasePegwebProd}
     PAYPAL_CLIENTID:     ${ssm:rsmPayPayClientIDDev}
     PAYPAL_CLIENTSECRET: ${ssm:rsmPayPalClientSecretDev}
+    PAYPAL_ENVIRONMENT:  sandbox
     JWT_SECRET:          ${ssm:rsmJWTSecretDev}
     JWT_ISSUER:          Robin's Nest Designs
     JWT_MAX_AGE:         14d
