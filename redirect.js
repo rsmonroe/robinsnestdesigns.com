@@ -1,5 +1,5 @@
-import url from 'url'
-import { knex } from './datasources'
+const url = require('url')
+const knex = require('./knex')
 
 const redirectUrls = [
   {
@@ -32,12 +32,14 @@ const redirectUrls = [
   },
 ]
 
-export default async (req, res) => {
-  const requestUrl = url.parse(req.url).href
+const handler = async (req, res) => {
+  const requestPath = req.header('x-request-path') || ""
+  const queryStr = url.parse(req.url).href.split('?')[1] || ""
+  const requestUrl = requestPath + (queryStr ? ('?' + queryStr) : '')
   for (const cfg of redirectUrls) {
     const match = cfg.src.exec(requestUrl)
     if (match) {
-      let redirectPath = await Promise.resolve(cfg.dest.apply(null, match))
+      const redirectPath = url.resolve(process.env.SITE_URL, await Promise.resolve(cfg.dest.apply(null, match)))
       res.setHeader('Location', redirectPath)
       res.status(301)
       res.send('Moved to: ' + redirectPath)
@@ -47,3 +49,9 @@ export default async (req, res) => {
   res.status(404)
   res.send('Not found')
 }
+
+const app = require('express')()
+app.get('/redirect', handler)
+const serverless = require('serverless-http')
+module.exports = {}
+module.exports.lambda = serverless(app)

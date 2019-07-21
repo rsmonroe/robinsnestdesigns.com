@@ -10,7 +10,6 @@ provider:
   memorySize:            1024
   timeout:               30
   environment:
-    API_URL:             https://beta.robinsnestdesigns.com/graphql
     SITE_URL:            https://beta.robinsnestdesigns.com/
     SQL_ENGINE:          mssql
     SQL_PORT:            1433
@@ -49,4 +48,10 @@ functions:
     events:
       - http:
           path:          sitemap
+          method:        get
+  redirect:
+    handler:             redirect.lambda
+    events:
+      - http:
+          path:          redirect
           method:        get
