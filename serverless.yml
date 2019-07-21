@@ -1,0 +1,51 @@
+service:                 robinsnestdesigns-api
+plugins:
+  - serverless-offline
+  - serverless-plugin-ncc
+provider:
+  name:                  aws
+  runtime:               nodejs10.x
+  stage:                 dev
+  region:                us-east-1
+  memorySize:            1024
+  timeout:               30
+  environment:
+    API_URL:             https://beta.robinsnestdesigns.com/graphql
+    SITE_URL:            https://beta.robinsnestdesigns.com/
+    SQL_ENGINE:          mssql
+    SQL_PORT:            1433
+    SQL_HOST:            ${ssm:rsmSQLHostPegwebProd}
+    SQL_USER:            ${ssm:rsmSQLUserPegwebProd}
+    SQL_PWD:             ${ssm:rsmSQLPasswordPegwebProd}
+    SQL_DB:              ${ssm:rsmSQLDatabasePegwebProd}
+    PAYPAL_CLIENTID:     ${ssm:rsmPayPayClientIDDev}
+    PAYPAL_CLIENTSECRET: ${ssm:rsmPayPalClientSecretDev}
+    JWT_SECRET:          ${ssm:rsmJWTSecretDev}
+    JWT_ISSUER:          Robin's Nest Designs
+    JWT_MAX_AGE:         14d
+    AWSAccessKeyId:      ${ssm:rsmAWSAccessKeyId}
+    AWSSecretKey:        ${ssm:rsmAWSAccessSecret}
+    AWSUploadBucket:     ${ssm:rsmAWSUploadBucket}
+    MAILGUN_API_KEY:     ${ssm:rsmMailgunApiKey}
+functions:
+  graphql:
+    handler:             graphql.lambda
+    events:
+      - http:
+          path:          graphql
+          method:        post
+      - http:
+          path:          graphql
+          method:        options
+  playground:
+    handler:             playground.lambda
+    events:
+      - http:
+          path:          graphql
+          method:        get
+  sitemap:
+    handler:             sitemap.lambda
+    events:
+      - http:
+          path:          sitemap
+          method:        get
