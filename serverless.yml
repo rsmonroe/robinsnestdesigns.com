@@ -5,8 +5,8 @@ plugins:
 provider:
   name:                  aws
   runtime:               nodejs10.x
-  stage:                 dev
   region:                us-east-1
+  stage:                 ${opt:stage, 'dev'}
   memorySize:            1024
   timeout:               30
   environment:
@@ -17,7 +17,7 @@ provider:
     SQL_USER:            ${ssm:rsmSQLUserPegwebProd}
     SQL_PWD:             ${ssm:rsmSQLPasswordPegwebProd}
     SQL_DB:              ${ssm:rsmSQLDatabasePegwebProd}
-    PAYPAL_CLIENTID:     ${ssm:rsmPayPayClientID-${self:provider.stage}}
+    PAYPAL_CLIENTID:     ${ssm:rsmPayPalClientID-${self:provider.stage}}
     PAYPAL_CLIENTSECRET: ${ssm:rsmPayPalClientSecret-${self:provider.stage}}
     PAYPAL_ENVIRONMENT:  ${ssm:rsmPayPalEnvironment-${self:provider.stage}}
     JWT_SECRET:          ${ssm:rsmJWTSecret-${self:provider.stage}}
@@ -27,6 +27,8 @@ provider:
     AWSSecretKey:        ${ssm:rsmAWSAccessSecret}
     AWSUploadBucket:     ${ssm:rsmAWSUploadBucket}
     MAILGUN_API_KEY:     ${ssm:rsmMailgunApiKey}
+package:
+  individually:          true
 functions:
   graphql:
     handler:             graphql.lambda
@@ -53,5 +55,5 @@ functions:
     handler:             redirect.lambda
     events:
       - http:
-          path:          redirect
+          path:          redirect/{proxy+}
           method:        get

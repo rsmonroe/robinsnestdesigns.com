@@ -33,9 +33,10 @@ const redirectUrls = [
 ]
 
 const handler = async (req, res) => {
-  const requestPath = req.header('x-request-path') || ""
+  const requestPath = req.params.requestPath || ""
   const queryStr = url.parse(req.url).href.split('?')[1] || ""
   const requestUrl = requestPath + (queryStr ? ('?' + queryStr) : '')
+  console.log('redirecting', requestUrl)
   for (const cfg of redirectUrls) {
     const match = cfg.src.exec(requestUrl)
     if (match) {
@@ -51,7 +52,7 @@ const handler = async (req, res) => {
 }
 
 const app = require('express')()
-app.get('/redirect', handler)
+app.get('/redirect/:requestPath', handler)
 const serverless = require('serverless-http')
 module.exports = {}
 module.exports.lambda = serverless(app)
