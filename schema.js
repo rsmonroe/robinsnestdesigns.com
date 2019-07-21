@@ -23,6 +23,11 @@ const typeDefs = gql`
     user(token: String!): User
     wishlist(token: String!): [WishListItem!]!
     allPromos(token: String!): [Promo!]!
+    siteinfo: SiteInfo!
+  }
+
+  type SiteInfo {
+    paypalClientId: String!
   }
 
   type Promo {

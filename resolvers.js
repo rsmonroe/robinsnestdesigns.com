@@ -343,6 +343,7 @@ const resolvers = {
   },
   ProductList,
   Query: {
+    siteinfo: (obj, args, context) => { return {} },
     category: (obj, args, context) => context.dataSources.db.getCategory(args.categoryId).then(x => reduceCategory(x[0])),
     allCategories: (obj, args, context) => context.dataSources.db.listCategories().then(reduceAllCategories),
     allSubcategories: (obj, args, context) => context.dataSources.db.listSubcategories(args.categoryId).then(reduceAllCategories),
@@ -621,6 +622,9 @@ const resolvers = {
       if (!payload.a) throw new Error('Not authorized')
       await context.dataSources.db.deletePromo(promoId)
     },
+  },
+  SiteInfo: {
+    paypalClientId: (obj, args, context) => process.env.PAYPAL_CLIENTID
   },
   Product: {
     isOnSale: (obj, args, context) => isOnSale(obj),
