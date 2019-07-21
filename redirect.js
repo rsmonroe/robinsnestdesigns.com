@@ -3,11 +3,11 @@ const knex = require('./knex')
 
 const redirectUrls = [
   {
-    src: /\/category_results\.cfm\?Category=(\d+)/,
+    src: /category_results\.cfm\?Category=(\d+)/,
     dest: (_, categoryId) => `/search/c/${categoryId}`,
   },
   {
-    src: /\/results\.cfm\?SubCategory=(\d+)/,
+    src: /results\.cfm\?SubCategory=(\d+)/,
     dest: async (_, subcategoryId) => {
       const category = await knex
         .select('Category as categoryId')
@@ -23,11 +23,11 @@ const redirectUrls = [
     }
   },
   {
-    src: /\/Results\.cfm\?KeyWords=(.+)/,
+    src: /Results\.cfm\?KeyWords=(.+)/,
     dest: (_, searchPhrase) => `/search/?searchPhrase=${searchPhrase}`
   },
   {
-    src: /\/detail.cfm\?ID=(\d+)/,
+    src: /detail.cfm\?ID=(\d+)/,
     dest: (_, productId) => `/product/${productId}`
   },
 ]
