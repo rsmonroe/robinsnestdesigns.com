@@ -198,6 +198,7 @@ const handler = async (hostname) => {
 const app = require('express')()
 app.get('/sitemap', async (req, res) => {
   try {
+    await knex.initialize()
     const hostname = process.env.SITE_URL
     if (!hostname) throw new Error('set SITE_URL in env')
     const sitemap = await timeAsyncFn(() => handler(hostname), 'handler')

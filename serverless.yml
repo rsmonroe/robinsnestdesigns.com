@@ -17,10 +17,10 @@ provider:
     SQL_USER:            ${ssm:rsmSQLUserPegwebProd}
     SQL_PWD:             ${ssm:rsmSQLPasswordPegwebProd}
     SQL_DB:              ${ssm:rsmSQLDatabasePegwebProd}
-    PAYPAL_CLIENTID:     ${ssm:rsmPayPayClientIDDev}
-    PAYPAL_CLIENTSECRET: ${ssm:rsmPayPalClientSecretDev}
-    PAYPAL_ENVIRONMENT:  sandbox
-    JWT_SECRET:          ${ssm:rsmJWTSecretDev}
+    PAYPAL_CLIENTID:     ${ssm:rsmPayPayClientID-${self:provider.stage}}
+    PAYPAL_CLIENTSECRET: ${ssm:rsmPayPalClientSecret-${self:provider.stage}}
+    PAYPAL_ENVIRONMENT:  ${ssm:rsmPayPalEnvironment-${self:provider.stage}}
+    JWT_SECRET:          ${ssm:rsmJWTSecret-${self:provider.stage}}
     JWT_ISSUER:          Robin's Nest Designs
     JWT_MAX_AGE:         14d
     AWSAccessKeyId:      ${ssm:rsmAWSAccessKeyId}
