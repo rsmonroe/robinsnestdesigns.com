@@ -4,8 +4,8 @@ const fs = require('fs')
 const url = require('url')
 const sitemap = require('sitemap')
 const slugify = require('slugify')
-const knex = require('./knex')
-const { MyDB } = require('./datasources')
+const { knex, readDB } = require('./db/db')
+const listProductsCategories = require('./db/Product/listProductsCategories')
 
 const ProductLinkStr = (props) => (
   `/product/${props.productId}/${slugify('' + props.category)}/${slugify('' + props.subcategory)}/${slugify('' + props.title)}?listref=${props.listName}`
@@ -37,28 +37,6 @@ const makeUrlObj = (url) => {
   return { url }
 }
 
-const WaitPromise = (ms) => {
-  return new Promise((resolve, reject) => {
-      setTimeout(() => resolve(), ms)
-  })
-}
-
-const dbWithRetry = async (dbfn, nRetries = 5, waitTime = 100, waitGrowth = 2.5) => {
-  let lastErr = null
-  for (let i = 0; i < nRetries; i++) {
-    try {
-      const retVal = await dbfn()
-      return retVal
-    } catch (err) {
-      lastErr = err
-      console.error('DB encountered error, trying again after ' + waitTime + ' ms', err)
-      await WaitPromise(waitTime)
-      waitTime *= waitGrowth
-    }
-  }
-  throw new Error('Maximum retries exhausted', lastErr)
-}
-
 const timeAsyncFn = async (fn, title) => {
   const startTime = Date.now()
   try {
@@ -70,7 +48,7 @@ const timeAsyncFn = async (fn, title) => {
   }
 }
 
-const addProductUrls = async (db, urls) => {
+const addProductUrls = async (urls) => {
   const productStream = knex.select(
     'Products.ID as ProductID',
     'Products.ItemName as ItemName',
@@ -94,7 +72,7 @@ const addProductUrls = async (db, urls) => {
   }
 }
 
-const getCategories = () => knex.raw(`
+const getCategories = knex.raw(`
   select Category as ID
   from Products
   where Active = 1 and Category is not null
@@ -118,7 +96,7 @@ const getCategories = () => knex.raw(`
   )
 `)
 
-const getSubcategories = () => knex.raw(`
+const getSubcategories = knex.raw(`
   select t1.ID as ID, Subcategory.Category as Category
   from (
     select Products.SubCategory as ID
@@ -148,7 +126,7 @@ const getSubcategories = () => knex.raw(`
 const addSearchUrls = async(db, urls) => {
 
   const processCategories = async () => {
-    const allCategories = await dbWithRetry(getCategories)
+    const allCategories = await readDB(getCategories, 'Category')
     allCategories.forEach(category => {
       const categoryArgs = { categoryId: category.ID }
       urls.add(makeUrlObj(SearchLinkStr(categoryArgs)))
@@ -156,7 +134,7 @@ const addSearchUrls = async(db, urls) => {
   }
 
   const processSubcategories = async () => {
-    const allSubcategories = await dbWithRetry(getSubcategories)
+    const allSubcategories = await readDB(getSubcategories, 'Subcategory')
     allSubcategories.forEach(subcategory => {
       const subcatArgs = { categoryId: subcategory.Category, subcategoryId: subcategory.ID }
       urls.add(makeUrlObj(SearchLinkStr(subcatArgs)))
@@ -172,9 +150,9 @@ const addSearchUrls = async(db, urls) => {
 const handler = async (hostname) => {
   if (!hostname) throw new Error("Set SITE_URL before continuing")
 
-  const cacheTime = 600000
-  const db = new MyDB()
-  await db.initialize({ context: {} })
+  const cacheTime = 1000 * 60 * 60 * 24
+  //const db = new MyDB()
+  //await db.initialize({ context: {} })
 
   const urls = sitemap.createSitemap({
     hostname,
@@ -185,11 +163,11 @@ const handler = async (hostname) => {
 
   await Promise.all([
     timeAsyncFn(async () => {
-      const categories = await db.listProductsCategories()
+      const categories = await listProductsCategories()
       categories.forEach(c => urls.add(makeUrlObj('/category/' + c.ID)))
     }, 'addCategoryUrls'),
-    timeAsyncFn(() => addProductUrls(db, urls), 'addProductUrls'),
-    timeAsyncFn(() => addSearchUrls(db, urls), 'addSearchUrls')
+    timeAsyncFn(() => addProductUrls(urls), 'addProductUrls'),
+    timeAsyncFn(() => addSearchUrls(urls), 'addSearchUrls')
   ])
 
   return await timeAsyncFn(() => urls.toString(), 'sitemap.createSitemap')
