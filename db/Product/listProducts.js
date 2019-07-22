@@ -38,6 +38,6 @@ module.exports = (args) => {
       .orderBy('relevance', 'desc')
       .orderBy('Products.ID', 'desc')
   }
-  console.log('listProducts', dataQuery.toString())
+  // console.log('listProducts', dataQuery.toString())
   return readDB(dataQuery, 'Products')
 }

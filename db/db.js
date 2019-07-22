@@ -30,11 +30,23 @@ const runQuery = async (query) => {
   })
 }
 
+let nTotal = 0
+let nMisses = 0
+
 const readDB = async (query, namespace) => {
-  await migrate()
+  // await migrate()
   const key = query.toString()
   let queryPromise = cache.get(key)
+  nTotal++
   if (!queryPromise) {
+    nMisses++
+    console.log('query cache miss', {
+      namespace,
+      key,
+      nTotal,
+      nMisses,
+      missRate: (nMisses / nTotal) * 100,
+    })
     queryPromise = runQuery(query)
     cache.set(key, queryPromise, namespace)
   }
@@ -42,7 +54,7 @@ const readDB = async (query, namespace) => {
 }
 
 const writeDB = async (query, namespace) => {
-  await migrate()
+  // await migrate()
   cache.invalidate(namespace)
   // TODO: the current awaiters of promises in namespaces will prolly still see old data
   // TODO retry updates/inserts?

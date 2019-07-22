@@ -29,6 +29,6 @@ module.exports = (args) => {
           .innerJoin('Products', 'Products.ID', 'Search3.ID')
       )
   )
-  console.log('listProductsSubcategories', subcategoryQuery.toString())
+  // console.log('listProductsSubcategories', subcategoryQuery.toString())
   return readDB(subcategoryQuery, 'Products')
 }

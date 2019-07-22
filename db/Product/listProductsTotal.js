@@ -7,6 +7,6 @@ module.exports = (args) => {
   const searchQueryNoAs = buildSearchQuery(knex, args)
   const searchQuery = searchQueryNoAs.as('Search')
   const countQuery = knex.count('* as nRecords').from(searchQuery)
-  console.log('listProductsTotal', countQuery.toString())
+  // console.log('listProductsTotal', countQuery.toString())
   return readDB(countQuery, 'Products')
 }

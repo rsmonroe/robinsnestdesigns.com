@@ -7,10 +7,12 @@ class NamespacedCache {
   }
 
   get(key) {
+    // console.log('NamespacedCache.get(' + key + ')')
     return this.cache.get(key)
   }
 
   set(key, value, namespace) {
+    // console.log('NamespacedCache.set(' + key + ', [value], ' + namespace + ')')
     this.cache.set(key, value)
     if (!this.namespaces[namespace])
       this.namespaces[namespace] = []
@@ -18,6 +20,7 @@ class NamespacedCache {
   }
 
   invalidate(namespace) {
+    // console.log('NamespacedCache.invalidate(' + namespace + ')')
     if (!this.namespaces[namespace]) return
     for (const key of this.namespaces[namespace]) {
       this.cache.del(key)
