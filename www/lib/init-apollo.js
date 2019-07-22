@@ -4,12 +4,10 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 import { BatchHttpLink } from "apollo-link-batch-http"
 import { RetryLink } from "apollo-link-retry"
 import { ApolloLink } from 'apollo-link'
-import { SchemaLink } from 'apollo-link-schema'
 import { API_URL } from '../constants/config'
 import { WISHLIST_QUERY_ALL } from '../constants/queries'
 import fetch from 'isomorphic-unfetch'
 import gql from 'graphql-tag'
-import schema from '../../api/schema'
 
 const typeDefs = gql`
   extend type Query {
@@ -37,7 +35,7 @@ function create (initialState, req) {
     }
   }).restore(initialState || {})
 
-  const link = process.browser ? ApolloLink.from([
+  const link = ApolloLink.from([
     new RetryLink({
       delay: {
         initial: 300,
@@ -52,7 +50,7 @@ function create (initialState, req) {
     new BatchHttpLink({
       uri: API_URL
     }),
-  ]): new SchemaLink({ schema })
+  ])
 
   const client = new ApolloClient({
     connectToDevTools: process.browser,

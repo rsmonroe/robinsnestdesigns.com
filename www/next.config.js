@@ -26,18 +26,6 @@ module.exports = {
         ]
       }
     ]
-    config.externals = [
-      'net',
-      'tls',
-      'dns',
-      'fs',
-      'mysql2',
-      'oracle',
-      'oracledb',
-      'pg',
-      'pg-query-stream',
-      'sqlite3',
-    ]
     return config;
   }
 }
