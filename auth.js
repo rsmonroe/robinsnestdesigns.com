@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken')
 const reduceUser = require('./reducers/reduceUser')
 const findUserById = require('./db/User/findUserById')
+const tryUpsertUser = require('./db/User/tryUpsertUser')
+const findUser = require('./db/User/findUser')
 
 for (let s of [ 'JWT_SECRET', 'JWT_ISSUER' ]) {
   if (!process.env[s]) throw new Error(s + ' is required in the environment')
@@ -24,11 +26,11 @@ const verifyAuthToken = (token) => {
 }
 
 const register = (obj, args, context) => {
-  return context.dataSources.db.tryUpsertUser(args.email, { Email: args.email, Password: args.password }).then(() => signin(obj, args, context))
+  return tryUpsertUser(args.email, { Email: args.email, Password: args.password }).then(() => signin(obj, args, context))
 }
 
 const signin = (obj, args, context) => {
-  return context.dataSources.db.findUser(args.email).then((user) => {
+  return findUser(args.email).then((user) => {
     if (!user) {
       return Promise.reject(new Error('User does not exist'));
     } else {
