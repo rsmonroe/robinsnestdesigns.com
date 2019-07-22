@@ -2,7 +2,7 @@ const paypal = require('@paypal/checkout-server-sdk');
 
 // Creating an environment
 if (!process.env.PAYPAL_CLIENTID || !process.env.PAYPAL_CLIENTSECRET || !process.env.PAYPAL_ENVIRONMENT)
-  throw new Error('You must set the environmental variables: PAYPAL_CLIENTID, PAYPAL_CLIENTSECRET, and PAYPAL_ENVIRONMENT before starting server')
+  console.warn('You must set the environmental variables: PAYPAL_CLIENTID, PAYPAL_CLIENTSECRET, and PAYPAL_ENVIRONMENT before starting server')
 
 let clientId =  process.env.PAYPAL_CLIENTID
 let clientSecret = process.env.PAYPAL_CLIENTSECRET

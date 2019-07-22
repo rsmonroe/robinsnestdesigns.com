@@ -5,7 +5,7 @@ const tryUpsertUser = require('./db/User/tryUpsertUser')
 const findUser = require('./db/User/findUser')
 
 for (let s of [ 'JWT_SECRET', 'JWT_ISSUER' ]) {
-  if (!process.env[s]) throw new Error(s + ' is required in the environment')
+  if (!process.env[s]) console.warn(s + ' is required in the environment')
 }
 
 const JWT_SECRET = process.env.JWT_SECRET
