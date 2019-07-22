@@ -123,7 +123,7 @@ const getSubcategories = knex.raw(`
   inner join Subcategory on Subcategory.ID = t1.ID
 `)
 
-const addSearchUrls = async(db, urls) => {
+const addSearchUrls = async(urls) => {
 
   const processCategories = async () => {
     const allCategories = await readDB(getCategories, 'Category')

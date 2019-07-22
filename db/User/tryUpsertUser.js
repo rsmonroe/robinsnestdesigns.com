@@ -1,5 +1,5 @@
-const { knex, writeDB }
-const { findUser } = require('./findUser')
+const { knex, writeDB } = require('../db')
+const findUser = require('./findUser')
 
 module.exports = async (email, user) => {
   const result = await findUser(email)
