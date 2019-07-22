@@ -1,6 +1,7 @@
 const { knex, readDB } = require('../db')
 const buildSearchQuery = require('./buildSearchQuery')
 const validateArgs = require('./validateArgs')
+const productFields = require('./productFields')
 
 module.exports = (args) => {
   args = validateArgs(args)
