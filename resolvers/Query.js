@@ -1,9 +1,9 @@
 const {
   verifyAuthToken,
   getUserFromToken,
-} = require('./auth')
+} = require('../auth')
 
-const getOrder = require('../db/getOrder')
+const getOrder = require('../db/Order/getOrder')
 const getCategory = require('../db/Category/getCategory')
 const listCategories = require('../db/Category/listCategories')
 const listSubcategories = require('../db/Subcategory/listSubcategories')
@@ -11,8 +11,8 @@ const getProduct = require('../db/Product/getProduct')
 const getWishList = require('../db/WishList/getWishList')
 const listPromos = require('../db/Promotions/listPromos')
 
-const reduceProduct = require('../reduceProduct')
-const reduceWishList = require('../reduceWishList')
+const reduceProduct = require('../reducers/reduceProduct')
+const reduceWishList = require('../reducers/reduceWishList')
 const reduceCategory = require('../reducers/reduceCategory')
 const reducePromo = require('../reducers/reducePromo')
 const reduceAllCategories = require('../reducers/reduceAllCategories')

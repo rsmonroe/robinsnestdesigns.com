@@ -1,7 +1,7 @@
-const listProductsTotal = require('../../db/Product/listProductsTotal')
-const listProducts = require('../../db/Product/listProducts')
-const listProductsCategories = require('../../db/Product/listProductsCategories')
-const listProductsSubcategories = require('../../db/Product/listProductsSubcategories')
+const listProductsTotal = require('../db/Product/listProductsTotal')
+const listProducts = require('../db/Product/listProducts')
+const listProductsCategories = require('../db/Product/listProductsCategories')
+const listProductsSubcategories = require('../db/Product/listProductsSubcategories')
 
 const reduceAllCategories = require('../reducers/reduceAllCategories')
 const reduceProduct = require('../reducers/reduceProduct')

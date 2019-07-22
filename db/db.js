@@ -49,8 +49,8 @@ const writeDB = async (query, namespace) => {
   return await query
 }
 
-module.exports {
-  knex
+module.exports = {
+  knex,
   readDB,
   writeDB,
 }

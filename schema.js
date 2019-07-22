@@ -310,4 +310,4 @@ const typeDefs = gql`
 
 `
 
-exports.typeDefs = typeDefs;
+module.exports = typeDefs

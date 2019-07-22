@@ -1,4 +1,4 @@
-const { knex, writeDB } = require(.'./db')
+const { knex, writeDB } = require('../db')
 
 module.exports = async (subcategoryId, { categoryId, title, comments, image }) => {
   if (!subcategoryId) throw new Error('subcategory ID is required')

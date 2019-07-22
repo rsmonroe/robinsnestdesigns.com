@@ -2,7 +2,7 @@ const { knex, readDB } = require('../db')
 const buildSearchQuery = require('./buildSearchQuery')
 const validateArgs = require('./validateArgs')
 
-listProductsTotal(args) {
+module.exports = (args) => {
   args = validateArgs(args)
   const searchQueryNoAs = buildSearchQuery(knex, args)
   const searchQuery = searchQueryNoAs.as('Search')

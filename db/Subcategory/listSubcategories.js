@@ -1,6 +1,5 @@
 const { knex, readDB } = require('../db')
-
-module.exports = listSubcategories(categoryId) {
+module.exports = (categoryId) => {
   let query = knex
     .select('Subcategory.ID as ID', 'Subcategory.Subcategory as Category', 'Comments')
     .from('Subcategory')

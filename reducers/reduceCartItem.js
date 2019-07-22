@@ -1,4 +1,4 @@
-const { isOnSale } = require('./utils')
+const { isOnSale } = require('../utils')
 const reduceProduct = require('./reduceProduct')
 
 const reduceCartItem = (cartItem) => {

@@ -2,7 +2,7 @@ const LRU = require("lru-cache")
 
 class NamespacedCache {
   constructor(options) {
-    this.cache = LRU(options)
+    this.cache = new LRU(options)
     this.namespaces = {}
   }
 

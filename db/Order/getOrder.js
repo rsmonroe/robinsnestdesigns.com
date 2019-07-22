@@ -1,5 +1,5 @@
 const reduceOrder = require('../../reducers/reduceOrder')
-const listCartItems = require('../WishList/listCartItems')
+const listCartItems = require('../Cart/listCartItems')
 const getPromo = require('../Promotions/getPromo')
 const getCustomerInfo = require('./getCustomerInfo')
 
