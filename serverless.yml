@@ -1,59 +1,81 @@
-service:                 robinsnestdesigns-api
+service:                  robinsnestdesigns
+stage:                    ${opt:stage, 'dev'}
+
 plugins:
-  - serverless-offline
   - serverless-plugin-ncc
-provider:
-  name:                  aws
-  runtime:               nodejs10.x
-  region:                us-east-1
-  stage:                 ${opt:stage, 'dev'}
-  memorySize:            1024
-  timeout:               30
-  environment:
-    SITE_URL:            https://beta.robinsnestdesigns.com/
-    SQL_ENGINE:          mssql
-    SQL_PORT:            1433
-    SQL_HOST:            ${ssm:rsmSQLHostPegwebProd}
-    SQL_USER:            ${ssm:rsmSQLUserPegwebProd}
-    SQL_PWD:             ${ssm:rsmSQLPasswordPegwebProd}
-    SQL_DB:              ${ssm:rsmSQLDatabasePegwebProd}
-    PAYPAL_CLIENTID:     ${ssm:rsmPayPalClientID-${self:provider.stage}}
-    PAYPAL_CLIENTSECRET: ${ssm:rsmPayPalClientSecret-${self:provider.stage}}
-    PAYPAL_ENVIRONMENT:  ${ssm:rsmPayPalEnvironment-${self:provider.stage}}
-    JWT_SECRET:          ${ssm:rsmJWTSecret-${self:provider.stage}}
-    JWT_ISSUER:          Robin's Nest Designs
-    JWT_MAX_AGE:         14d
-    AWSAccessKeyId:      ${ssm:rsmAWSAccessKeyId}
-    AWSSecretKey:        ${ssm:rsmAWSAccessSecret}
-    AWSUploadBucket:     ${ssm:rsmAWSUploadBucket}
-    MAILGUN_API_KEY:     ${ssm:rsmMailgunApiKey}
+  - serverless-nextjs-plugin
+  - serverless-plugin-split-stacks
+
+custom:
+  splitStacks:
+    perFunction:          true
+    perType:              false
+  serverless-nextjs:
+    nextConfigDir:        ./www/
+    assetsBucketName:     public-static-build-assets-2f3e5d.robinsnestdesigns.com
+    createAssetBucket:    false
+
 package:
-  individually:          true
+  individually:           true
+  excludeDevDependencies: false
+  exclude:
+    - ./**
+
+provider:
+  name:                   aws
+  runtime:                nodejs10.x
+  region:                 us-east-1
+  stage:                  ${opt:stage, 'dev'}
+  memorySize:             1024
+  timeout:                30
+  environment:
+    SITE_URL:             https://beta.robinsnestdesigns.com/
+    SQL_ENGINE:           mssql
+    SQL_PORT:             1433
+    SQL_HOST:             ${ssm:rsmSQLHostPegwebProd}
+    SQL_USER:             ${ssm:rsmSQLUserPegwebProd}
+    SQL_PWD:              ${ssm:rsmSQLPasswordPegwebProd}
+    SQL_DB:               ${ssm:rsmSQLDatabasePegwebProd}
+    PAYPAL_CLIENTID:      ${ssm:rsmPayPalClientID-${self:provider.stage}}
+    PAYPAL_CLIENTSECRET:  ${ssm:rsmPayPalClientSecret-${self:provider.stage}}
+    PAYPAL_ENVIRONMENT:   ${ssm:rsmPayPalEnvironment-${self:provider.stage}}
+    JWT_SECRET:           ${ssm:rsmJWTSecret-${self:provider.stage}}
+    JWT_ISSUER:           Robin's Nest Designs
+    JWT_MAX_AGE:          14d
+    AWSAccessKeyId:       ${ssm:rsmAWSAccessKeyId}
+    AWSSecretKey:         ${ssm:rsmAWSAccessSecret}
+    AWSUploadBucket:      ${ssm:rsmAWSUploadBucket}
+    MAILGUN_API_KEY:      ${ssm:rsmMailgunApiKey}
+    ENGINE_API_KEY:       ${ssm:rsmApolloEngineApiKey}
+
 functions:
   graphql:
-    handler:             graphql.lambda
+    handler:              api/graphql.lambda
     events:
       - http:
-          path:          graphql
-          method:        post
+          path:           graphql
+          method:         post
       - http:
-          path:          graphql
-          method:        options
+          path:           graphql
+          method:         options
+
   playground:
-    handler:             playground.lambda
+    handler:              api/playground.lambda
     events:
       - http:
-          path:          graphql
-          method:        get
+          path:           graphql
+          method:         get
+
   sitemap:
-    handler:             sitemap.lambda
+    handler:              api/sitemap.lambda
     events:
       - http:
-          path:          sitemap
-          method:        get
+          path:           sitemap
+          method:         get
+
   redirect:
-    handler:             redirect.lambda
+    handler:              api/redirect.lambda
     events:
       - http:
-          path:          redirect/{proxy+}
-          method:        get
+          path:           redirect/{proxy+}
+          method:         get
