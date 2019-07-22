@@ -12,14 +12,14 @@ class NamespacedCache {
 
   set(key, value, namespace) {
     this.cache.set(key, value)
-    if (!this.namespaces[ns])
-      this.namespaces[ns] = []
-    this.namespaces[ns].push(key)
+    if (!this.namespaces[namespace])
+      this.namespaces[namespace] = []
+    this.namespaces[namespace].push(key)
   }
 
   invalidate(namespace) {
-    if (!this.namespaces[ns]) return
-    for (const key of this.namespaces[ns]) {
+    if (!this.namespaces[namespace]) return
+    for (const key of this.namespaces[namespace]) {
       this.cache.del(key)
     }
   }
