@@ -19,7 +19,7 @@ const addToCart = async (obj, args, context) => {
     cartId = await nextCartNumber()
   }
 
-  let order = await getOrder(context.dataSources.db, cartId)
+  let order = await getOrder(cartId)
   if (order.placed)
     throw new Error('Order is not modifiable')
 
