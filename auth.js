@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
-const reduceUser = require('./reduceUser')
+const reduceUser = require('./reducers/reduceUser')
+const findUserById = require('./db/User/findUserById')
 
 for (let s of [ 'JWT_SECRET', 'JWT_ISSUER' ]) {
   if (!process.env[s]) throw new Error(s + ' is required in the environment')
@@ -47,9 +48,9 @@ const signin = (obj, args, context) => {
   })
 }
 
-const getUserFromToken = async (token, db) => {
+const getUserFromToken = async (token) => {
   const { uid } = verifyAuthToken(token)
-  const userRow = await db.findUserById(uid)
+  const userRow = await findUserById(uid)
   if (!userRow) throw new Error('user does not exist')
   const user = reduceUser(userRow)
   return user

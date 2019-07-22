@@ -1,7 +1,7 @@
-const knex = require('../api/knex')
-const { MyDB } = require('../api/datasources')
-const searchEngine = require('../api/searchEngine')
-const reduceProduct = require('../api/reduceProduct')
+const knex = require('../knex')
+const { MyDB } = require('../datasources')
+const searchEngine = require('../searchEngine')
+const reduceProduct = require('../reduceProduct')
 
 const nextTick = () => new Promise((resolve, reject) => setTimeout(() => resolve(), 10 + Math.random() * 90))
 

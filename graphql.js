@@ -1,8 +1,6 @@
 const { ApolloServer } = require('./apollo-server')
-const { MyDB } = require('./datasources')
 const { typeDefs } = require('./schema')
 const { resolvers } = require('./resolvers')
-const knex = require('./knex')
 
 const isDev =  true
 
@@ -12,11 +10,6 @@ const server = new ApolloServer({
   introspection: isDev,
   playground: isDev,
   tracing: isDev,
-  dataSources: () => {
-    return {
-      db: new MyDB(),
-    }
-  }
 })
 
 const graphqlHandler = server.createHandler({

@@ -23,6 +23,7 @@
     "graphql-playground-middleware-lambda": "^1.7.13",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.15.2",
+    "lru-cache": "^5.1.1",
     "mailgun-js": "^0.22.0",
     "mssql": "4.1.0",
     "mysql": "^2.17.1",

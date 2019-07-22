@@ -4,7 +4,6 @@ const { gql } = require('./apollo-server')
 const typeDefs = gql`
   type Query {
     category(categoryId: ID!): Category!
-    saleCategories: [Category!]!
     allCategories: [Category!]!
     allSubcategories(categoryId: ID): [SubCategory!]!
     product(productId: ID!): Product
@@ -24,6 +23,7 @@ const typeDefs = gql`
     wishlist(token: String!): [WishListItem!]!
     allPromos(token: String!): [Promo!]!
     siteinfo: SiteInfo!
+    similarKeywords(keyword: String!): [String!]!
   }
 
   type SiteInfo {

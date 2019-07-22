@@ -248,7 +248,7 @@ class SearchEngine {
   async has(recordId) {
     recordId = validateId(recordId)
     await this.init()
-    const count = await this.knex.count('* as count').from(this.keywordTableName).where('record', recordId)
+    const { count } = await this.knex.count('* as count').from(this.keywordTableName).where('record', recordId).first()
     return count > 0
   }
 
@@ -322,6 +322,20 @@ class SearchEngine {
       .from(innerQuery)
       .groupBy('record')
   }
+
+  async getAllKeywords() {
+    await this.init()
+    return await this.knex.select('keyword').distinct().from(this.keywordTableName).pluck('keyword')
+  }
+
+  async hasKeyword(keyword) {
+    if(!isValidKeyword(keyword))
+      throw new Error('invalid keyword')
+    await this.init()
+    const { count } = await this.knex.count('* as count').from(this.keywordTableName).where('keyword', keyword).first()
+    return count > 0
+  }
+
 }
 
 module.exports = SearchEngine
