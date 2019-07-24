@@ -1,5 +1,5 @@
 const origins = {
-  'beta.robinsnestdesigns.com': 'https://ylovt93etb.execute-api.us-east-1.amazonaws.com/prod/',
+  'www.robinsnestdesigns.com': 'https://ylovt93etb.execute-api.us-east-1.amazonaws.com/prod/',
   'dev.robinsnestdesigns.com': 'https://bfowcpbde6.execute-api.us-east-1.amazonaws.com/dev/',
 }
 
