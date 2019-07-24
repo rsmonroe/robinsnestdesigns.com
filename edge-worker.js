@@ -200,6 +200,19 @@ async function sendStatus({ request, status, headers }) {
 
 async function handleRequest(request) {
   const url = new URL(request.url)
+
+  let [ subdomain, domain, tld ] = url.hostname.split('.')
+
+  if (tld == null) {
+    url.hostname = [ 'www', domain, tld ].join('.')
+    return Response.redirect(url, 301)
+  }
+
+  if (subdomain == 'beta') {
+    url.hostname = [ 'www', domain, tld ].join('.')
+    return Response.redirect(url, 301)
+  }
+
   const originServer = origins[url.hostname]
   if (!originServer) {
     console.log('Passthrough', url.toString(), request)
