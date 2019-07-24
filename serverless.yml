@@ -1,12 +1,14 @@
 service:                  robinsnestdesigns
-stage:                    ${opt:stage, 'dev'}
 
 plugins:
+  - serverless-offline
   - serverless-plugin-ncc
   - serverless-nextjs-plugin
   - serverless-plugin-split-stacks
 
 custom:
+  stage:                  ${opt:stage, 'dev'}
+  config:                 ${file(config.${self:custom.stage}.yml)}
   splitStacks:
     perFunction:          true
     perType:              false
@@ -25,21 +27,21 @@ provider:
   name:                   aws
   runtime:                nodejs10.x
   region:                 us-east-1
-  stage:                  ${opt:stage, 'dev'}
+  stage:                  ${self:custom.stage}
   memorySize:             1024
   timeout:                30
   environment:
-    SITE_URL:             https://beta.robinsnestdesigns.com/
+    SITE_URL:             ${self:custom.config.siteUrl}
     SQL_ENGINE:           mssql
     SQL_PORT:             1433
     SQL_HOST:             ${ssm:rsmSQLHostPegwebProd}
     SQL_USER:             ${ssm:rsmSQLUserPegwebProd}
     SQL_PWD:              ${ssm:rsmSQLPasswordPegwebProd}
     SQL_DB:               ${ssm:rsmSQLDatabasePegwebProd}
-    PAYPAL_CLIENTID:      ${ssm:rsmPayPalClientID-${self:provider.stage}}
-    PAYPAL_CLIENTSECRET:  ${ssm:rsmPayPalClientSecret-${self:provider.stage}}
-    PAYPAL_ENVIRONMENT:   ${ssm:rsmPayPalEnvironment-${self:provider.stage}}
-    JWT_SECRET:           ${ssm:rsmJWTSecret-${self:provider.stage}}
+    PAYPAL_CLIENTID:      ${ssm:rsmPayPalClientID-${self:custom.stage}}
+    PAYPAL_CLIENTSECRET:  ${ssm:rsmPayPalClientSecret-${self:custom.stage}}
+    PAYPAL_ENVIRONMENT:   ${ssm:rsmPayPalEnvironment-${self:custom.stage}}
+    JWT_SECRET:           ${ssm:rsmJWTSecret-${self:custom.stage}}
     JWT_ISSUER:           Robin's Nest Designs
     JWT_MAX_AGE:          14d
     AWSAccessKeyId:       ${ssm:rsmAWSAccessKeyId}
@@ -58,24 +60,30 @@ functions:
       - http:
           path:           graphql
           method:         options
-
   playground:
     handler:              api/playground.lambda
     events:
       - http:
           path:           graphql
           method:         get
-
   sitemap:
     handler:              api/sitemap.lambda
     events:
       - http:
           path:           sitemap
           method:         get
-
   redirect:
     handler:              api/redirect.lambda
     events:
       - http:
           path:           redirect/{proxy+}
           method:         get
+  prewarm-index:
+    handler:              api/handlers/prewarmer.lambda
+    events:
+      - schedule:
+          name:           prewarm-index-schedule
+          rate:           rate(30 minutes)
+          enabled:        true
+          environment:
+            - PAGE_URL:   ${self:custom.config.siteUrl}

@@ -4,8 +4,8 @@ const migrate = require('./migrate')
 const knex = require('../knex')
 
 // TODO: tune these params
-const CACHE_MAX_SIZE = 2 << 20
-const CACHE_MAX_AGE = 5 * 60 * 1000
+const CACHE_MAX_SIZE = 2 << 15
+const CACHE_MAX_AGE = 30 * 60 * 1000
 
 const QUERY_RETRIES = 10
 const QUERY_DELAY_MIN = 100
@@ -14,8 +14,6 @@ const QUERY_DELAY_FACTOR = 2
 const cache = new NamespacedCache({
   max: CACHE_MAX_SIZE,
   maxAge: CACHE_MAX_AGE,
-  // TODO: account for size of dataset
-  length: (n, key) => key.length,
 })
 
 const runQuery = async (query) => {
