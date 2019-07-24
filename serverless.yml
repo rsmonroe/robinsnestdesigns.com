@@ -82,10 +82,10 @@ functions:
           method:         get
   prewarm-index:
     handler:              api/handlers/prewarmer.lambda
+    environment:
+      PAGE_URL:           ${self:custom.config.siteUrl}
     events:
       - schedule:
           name:           prewarm-index-schedule-${self:custom.stage}
           rate:           rate(30 minutes)
           enabled:        true
-          environment:
-            PAGE_URL:     ${self:custom.config.siteUrl}
