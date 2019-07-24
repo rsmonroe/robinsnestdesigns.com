@@ -82,7 +82,7 @@ functions:
     handler:              api/handlers/prewarmer.lambda
     events:
       - schedule:
-          name:           prewarm-index-schedule
+          name:           prewarm-index-schedule-${self:custom.stage}
           rate:           rate(30 minutes)
           enabled:        true
           environment:
