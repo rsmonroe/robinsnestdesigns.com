@@ -37,6 +37,11 @@ export default (props) => (
           <a>Modify Promos</a>
         </Link>
       </li>
+      <li>
+        <Link href="/admin/image-upload">
+          <a>Upload Image</a>
+        </Link>
+      </li>
     </ul>
   </div></Col>
 )

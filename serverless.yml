@@ -9,6 +9,8 @@ plugins:
 custom:
   stage:                  ${opt:stage, 'dev'}
   config:                 ${file(config.${self:custom.stage}.yml)}
+  ncc:
+    cache:                false
   splitStacks:
     perFunction:          true
     perType:              false
@@ -86,4 +88,4 @@ functions:
           rate:           rate(30 minutes)
           enabled:        true
           environment:
-            - PAGE_URL:   ${self:custom.config.siteUrl}
+            PAGE_URL:     ${self:custom.config.siteUrl}
